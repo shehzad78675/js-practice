@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Files</title>
+    <style>
+        .main-section {
+            height: 97vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            align-content: center;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .main-wrapper-div {
+            /* padding: 2px; */
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            align-content: center;
+            justify-content: center;
+            align-items: center;
+            background: #4285F4;
+            /* margin: 0 !important; */
+            color: white;
+            font-family: sans-serif;
+            height: 50%;
+            width: 50%;
+            border-radius: 15px;
+            box-shadow: 0 3px 6px rgb(0 0 0 / 16%), 0 3px 6px rgb(0 0 0 / 23%);
+        }
+
+        .warning-span {
+            font-weight: bold;
+            font-family: sans-serif;
+            color: #d60000;
+            margin-top: 3px;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-section">
+        <div id="div" class="main-wrapper-div">
+            <h2>Files</h2>
+            <h4>Please choose files less than 100MB and mp4 Files only.</h4>
+            <input type="file" id="file" accept=".mp4,.mkv">
+            <span class="warning-span"></span>
+        </div>
+    </div>
+
+    <script>
+        let file = document.getElementById('file');
+        file.addEventListener('change', getFile);
+        let files = new FileReader();
+        files.onloadend = (e) => {
+            console.log(e.target.result)
+        }
+        function getFile(e) {
+            let fileSelected = e.target.files[0];
+            let arr = fileSelected.name.split('');
+            let dotIndex = 0;
+            arr.map((item, index) => {
+                if (item == '.')
+                    dotIndex = index
+            })
+            let ext = arr.splice(dotIndex);
+            ext = ext.join('');
+            if (ext == '.mp4') {
+                if (fileSelected.size >= 1e+8) {
+                    let span = document.querySelector('.warning-span');
+                    span.innerHTML = 'Selected File is above 100 mb, please select smaller File.';
+                    span.style.display = 'block';
+                    setTimeout(() => {
+                        span.style.display = 'none';
+                    }, 4000);
+                    file.value = '';
+                }
+            } else {
+                let span = document.querySelector('.warning-span');
+                span.innerHTML = `Selected File is ${ext}, please select mp4 File.`;
+                span.style.display = 'block';
+                setTimeout(() => {
+                    span.style.display = 'none';
+                }, 4000);
+                file.value = '';
+            }
+        }
+    </script>
+</body>
+
+</html>
